@@ -22,6 +22,16 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        Schema::create('users_products', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('productId');
+            $table->timestamps();
+
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('productId')->references('id')->on('products')->onDelete('cascade');
+        });
     }
 
     /**
@@ -31,6 +41,10 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::table('users_products', function(Blueprint $table){
+            $table->dropForeign(['userId', 'productId']);
+        });
         Schema::dropIfExists('users');
+        Schema::dropIfExists('users_products');
     }
 }
