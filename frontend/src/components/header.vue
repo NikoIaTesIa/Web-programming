@@ -13,9 +13,9 @@
         <!-- /.navbar -->
 
         <div class="profile-tools">
-          <!-- <a class="profile-tools__btn">Profile</a> -->
+          <router-link v-if="this.user_visible" class="profile-tools__item" :to="{name: 'login'}"><a href="#">{{ username }}</a></router-link>
           <!-- /.profile-tools__btn -->
-          <router-link class="profile-tools__item" :to="{name: 'login'}"><a href="#">Войти</a></router-link>
+          <router-link v-if="this.login_visible" class="profile-tools__item" :to="{name: 'login'}"><a href="#">Войти</a></router-link>
           <!-- /.profile-tools__btn -->
           <a class="profile-tools__item" href="#"><svg class="icon icon-search"><use xlink:href="#icon-search"></use></svg></a>
           <!-- /.profile-tools__btn -->
@@ -39,7 +39,21 @@
 
 <script>
 export default {
-  name: "header"
+    name: "header",
+    data() {
+        return {
+            user_visible: false,
+            login_visible: true,
+            username: null
+        }
+    },
+    mounted() {
+        if (localStorage.username !== null) {
+            this.username = localStorage.username
+            this.user_visible = !this.user_visible
+            this.login_visible = !this.login_visible
+        }
+    }
 }
 </script>
 

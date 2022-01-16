@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 */
 class LibraryController extends Controller
 {
-    public function info($userId)
-    {
-        $service = new LibraryService();
-        return $service->getLibrary($userId);
-    }
     /**
     * Добавляет продукт в библиотеку
     * @param Request request
@@ -24,7 +19,7 @@ class LibraryController extends Controller
     public function addToLibrary(Request $request)
     {
         $service = new LibraryService();
-        $service->addToLibrary($request->get('$productId'), $request->get('userId'));
+        $service->addToLibrary($request->get('userId'), $request->get('$productId'));
 
         return [
             'inLibrary'=> true

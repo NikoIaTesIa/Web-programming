@@ -16,7 +16,12 @@
               <div class="row">
                 <div class="col-12">
                   <div class="main-content__form">
-                    <form action="" class="form" method="post">
+                    <form class="form" onsubmit="return false;">
+                      <div class="form__item">
+                          <p class="form__message">{{ this.message }}</p>
+                          <!-- /.form__message -->
+                      </div>
+                      <!-- /.form__item -->
                       <div class="form__item">
                         <label for="username">Логин</label>
                         <input type="text" class="form__input" name="username" id="username">
@@ -25,15 +30,13 @@
                       <!-- /.form__item -->
                       <div class="form__item">
                         <label for="password">Пароль</label>
-                        <input type="text" class="form__input" name="password" id="password">
+                        <input type="password" class="form__input" name="password" id="password">
                         <!-- /.form__input -->
                       </div>
                       <!-- /.form__item -->
                       <div class="form__item form__item_centered">
                       <span class="form__wrap">
-                        <router-link :to="{name: 'main'}">
-                          <button class="form__btn" type="submit" value="Войти">Войти</button>
-                        </router-link>
+                        <button class="form__btn" type="submit" value="Войти" @click = "authorization()">Войти</button>
                       </span>
                       </div>
                       <!-- /.form__item -->
@@ -64,7 +67,46 @@
 
 <script>
 export default {
-  name: "login"
+    name: "login",
+    data() {
+        return {
+            userId: null,
+            username: 'NicolaTesla',
+            password: null,
+            message: '',
+            correct: false
+        }
+    },
+    methods: {
+        authorization() {
+            const params = {
+                name: this.username, password: this.password
+            }
+            this.$http.post('/user', params)
+                .then(response => this.checkCorrect(response.data.userId))
+        },
+        checkCorrect(data) {
+            if(data !== -1)
+            {
+                this.userId = data
+                this.correct = true
+                this.$router.push('/')
+                this.message = ""
+                localStorage.userId = this.userId
+                localStorage.username = this.username
+            }
+            else
+            {
+                this.message = "Неверный логин или пароль."
+            }
+            console.log(this.correct)
+        }
+    },
+    mounted() {
+        if (localStorage.userId) {
+            this.userId = localStorage.userId;
+        }
+    }
 }
 </script>
 

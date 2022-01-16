@@ -35,6 +35,12 @@
     margin-top: 1.5rem;
 }
 
+.form__message {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #ff3d3d;
+}
+
 .form__item {
     margin-bottom: 1rem;
 }

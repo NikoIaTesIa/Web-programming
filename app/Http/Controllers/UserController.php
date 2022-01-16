@@ -4,60 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends Controller
 {
-     public $users = array(
-        [
-        'id' => 1,
-        'login' => 'Administrator',
-        'password' => 'root'
-         ],
-        [
-        'id' => 2,
-        'login' => 'NicolaTesla',
-        'password' => '123'
-        ],
-        [
-        'id' => 3,
-        'login' => 'GermanChubov',
-        'password' => '12345'
-        ]
-        );
-
-     /**
-     * Список пользователей
-     * @return array[]
+    /**
+     * Список пользователей.
+     * @return Collection
      */
-     public function list()
-     {
-         return $this->users;
-     }
+    public function list()
+    {
+        return User::query()->get();
+    }
 
-     /**
+    /**
      * Информация о пользователе
      * @param $id
-     * @return array
+     * @return Model|object
      */
-     public function info($id)
-     {
-         return  $this->users[$id-1];
-     }
+    public function info($id)
+    {
+        return User::query()->where(['id' => $id])->first();
+    }
 
      public function authorization(Request $request)
      {
-         if ( !empty($request['password']) and !empty($request['login']) ) {
-             foreach ($this->users as $user) {
-                 if ($user['login'] == $request->get('login') && $user['password'] == $request->get('password')) {
-                     return [
-                         'userId'=> $user['id']
-                     ];
-                 }
-             }
-
-             return [
-                 'userId'=> 0
-             ];
+         $query_res = User::query()->where(['name' => $request->get('name')])->first();
+         if ($query_res == NULL) {
+             return ['userId'=> 0];
          }
+         else if ($query_res['password'] == $request->get('password')) {
+                 return ['userId'=> $query_res['id']];
+             }
+             else { return ['userId'=> 0]; }
      }
 }
+

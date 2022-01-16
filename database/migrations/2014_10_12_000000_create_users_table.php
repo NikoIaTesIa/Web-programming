@@ -41,7 +41,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users_products', function(Blueprint $table){
+        Schema::table('users_products', function(Blueprint $table) {
             $table->dropForeign(['userId', 'productId']);
         });
         Schema::dropIfExists('users');

@@ -15,7 +15,7 @@
                   <!-- /.product__poster -->
 
                   <div class="product__adding inner-wrap">
-                    <span class="product__btn-wrap"><button class="product__btn" type="submit" value="Войти">Добавить</button></span>
+                    <span class="product__btn-wrap"><button @click = "addToLibrary(product)" class="product__btn" type="submit" value="Войти">{{ product_state }}</button></span>
                     <!-- /.product__btn-wrap -->
                     <button class="product__btn product__btn_black product__btn_disabled" type="submit" value="Войти">Удалить</button>
                     <!-- /.product__btn-wrap -->
@@ -72,21 +72,30 @@
 import product from "@/components/product-item"
 export default {
   name: "product",
-  props: {
-    product: product,
-    id: String
-  },
   components: {
     // eslint-disable-next-line vue/no-unused-components
     product,
   },
-  beforeCreate: function() {
-    document.body.className = 'item_page';
-  },
-  created() {
-    this.id = this.$route.params.id
-    this.product = this.$route.params.product
-  }
+  methods: {
+        addToLibrary(product) {
+            const params = {
+                id: product.id, userId: localStorage.userId
+            }
+            this.$http.post('/library', params)
+            this.product_state = 'В библиотеке'
+        }
+    },
+    data() {
+        return {
+            product: null,
+            product_state: 'Добавить'
+        }
+    },
+    created() {
+        const id = this.$route.params.id
+        this.$http.get('/products/' + id)
+            .then(response => this.product = response.data)
+    }
 }
 </script>
 
